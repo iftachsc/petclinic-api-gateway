@@ -1,0 +1,11 @@
+metadata:
+  labels:
+    project: ${project.artifactId}
+    version: ${project.version}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        project: ${project.artifactId}
+        version: ${project.version}

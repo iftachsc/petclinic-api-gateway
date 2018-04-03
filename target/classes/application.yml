@@ -1,0 +1,16 @@
+zuul:
+  prefix: /api
+  ignoredServices: '*'
+  routes:
+    vets-service: 
+      path: /vet/**
+      url: http://vet-service/
+    visits-service: 
+      path: /visit/**
+      url: http://visit-service/
+    customers-service: 
+      path: /customer/**
+      url: http://customer-service/
+    api-gateway: 
+      path: /gateway/**
+      url: http://localhost:8080/

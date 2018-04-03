@@ -1,0 +1,9 @@
+metadata:
+  name: api-gateway
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+  
