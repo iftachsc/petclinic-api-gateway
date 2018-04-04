@@ -1,0 +1,23 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ${project.artifactId}-metrics-config
+data:
+  hawkular-openshift-agent: |
+    endpoints:
+    - type: prometheus
+      protocol: http
+      port: 9779
+      path: /metrics
+      tls:
+        skip_certificate_validation: true
+      collection_interval: 5s
+      metrics:
+      - name: jvm_memory_bytes_used
+        description: JVM Memory
+      - name: jvm_threads_current
+        description: JVM Thread#
+
+        
+        
+        

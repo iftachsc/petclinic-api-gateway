@@ -33,7 +33,7 @@ public class CustomersServiceClient {
     
 //    public OwnerDetails[] getOwners() {
 //		System.out.println("API asked to call customer-service");
-//		OwnerDetails[] owners = loadBalancedRestTemplate.getForObject("http://customers-service/owners", OwnerDetails[].class);
+//		OwnerDetails[] owners = loadBalancedRestTemplate.getForObject("http://customer-service/owners", OwnerDetails[].class);
 //		return owners;
 //    }
 }

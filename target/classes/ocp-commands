@@ -1,1 +1,0 @@
-oc delete all -l project=spring-petclinic-api-gateway

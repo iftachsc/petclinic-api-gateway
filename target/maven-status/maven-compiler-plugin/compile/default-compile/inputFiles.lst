@@ -1,9 +1,0 @@
-/Users/yftach.shenbaum/clients/cloudzone/MicroservicesOCP/spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/ApiGatewayApplication.java
-/Users/yftach.shenbaum/clients/cloudzone/MicroservicesOCP/spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/infrastructure/config/WebConfig.java
-/Users/yftach.shenbaum/clients/cloudzone/MicroservicesOCP/spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/boundary/web/ApiGatewayController.java
-/Users/yftach.shenbaum/clients/cloudzone/MicroservicesOCP/spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/application/OwnerDetails.java
-/Users/yftach.shenbaum/clients/cloudzone/MicroservicesOCP/spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/application/PetType.java
-/Users/yftach.shenbaum/clients/cloudzone/MicroservicesOCP/spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/application/VisitDetails.java
-/Users/yftach.shenbaum/clients/cloudzone/MicroservicesOCP/spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/application/VisitsServiceClient.java
-/Users/yftach.shenbaum/clients/cloudzone/MicroservicesOCP/spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/application/CustomersServiceClient.java
-/Users/yftach.shenbaum/clients/cloudzone/MicroservicesOCP/spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/application/PetDetails.java
