@@ -4,13 +4,13 @@ zuul:
   routes:
     vets-service: 
       path: /vet/**
-      url: http://vet-service/
+      url: http://vet-service:8080/
     visits-service: 
       path: /visit/**
-      url: http://visit-service/
+      url: http://visit-service:8080/
     customers-service: 
       path: /customer/**
-      url: http://customer-service/
+      url: http://customer-service:8080/
     api-gateway: 
       path: /gateway/**
       url: http://localhost:8080/
