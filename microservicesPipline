@@ -15,19 +15,23 @@
 			
 			def build = selector.object()
 			println build.status.phase
-			println build.spec.triggeredBy[0].githubWebHook.revision.git.commit
-			println build.spec.triggeredBy[0].githubWebHook.revision.git.committer.name
+			def rev = build.spec.triggeredBy[0].githubWebHook.revision.git
+			def commit = rev.commit
+			def commiter = rev.commiter
+			
 			//def = builds = buildConfig.related( "builds" )
 			
-			def commit  = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-			sh("git branch --contains ${build.spec.triggeredBy[0].githubWebHook.revision.git.committer.name}")
+			//def commit  = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+			sh("git branch --contains ${commit}")
+			def branch = sh(script: "git branch --contains ${commit}", returnStdout: true).trim()
+			//sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 			sh('oc whoami')
 			
-			println('-------------')
+			
 			//def scmVars = checkout scm
 			sh('ls')
 			
-			//openshift.newProject("integ-${scmVars.GIT_COMMIT}","--display-name", projectDisplayName)
+			openshift.newProject("integ-${branch}-${commit}","--display-name", projectDisplayName)
 			
 			println builds
 		}
