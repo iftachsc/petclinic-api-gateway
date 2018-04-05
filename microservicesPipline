@@ -10,9 +10,11 @@ node{
 	println builds
 	sh('oc whoami')
 	def scmVars = checkout scm
+	println scmVars
+	
+	def projectDisplayName = "api-gateway-${scmVars.GIT_BRANCH}-${scmVars.GIT_COMMIT}"
 	openshift.withCluster() {
-		openshift.newProject( 'test' )
-		
+		openshift.newProject("integ-${scmVars.GIT_COMMIT}","--display-name", projectDisplayName)
 		
 	//println builds[0].object().status.phase
 	}
