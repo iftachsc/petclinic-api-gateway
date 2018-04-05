@@ -1,7 +1,7 @@
 
 	def  microservices = ["vet-service", "visit-service", "customer-service"]
 	println(env.getEnvironment().collect({environmentVariable ->  "${environmentVariable.key} = ${environmentVariable.value}"}).join("\n"))
-node{
+	node{
 	
 	
 	//def projectDisplayName = "api-gateway-${scmVars.GIT_BRANCH}-${scmVars.GIT_COMMIT}"
@@ -15,7 +15,10 @@ node{
 			
 			//selector.object()
 			builds = selector.related( "builds" )
-			println builds
+			builds.untilEach {
+                print it.object().status.phase
+                	return true
+            }
 			sh('oc whoami')
 			
 			println('-------------')
@@ -23,7 +26,9 @@ node{
 			sh('ls')
 			
 			//openshift.newProject("integ-${scmVars.GIT_COMMIT}","--display-name", projectDisplayName)
-			
+			builds.untilEach {
+                return it.object().status.phase == "Complete"
+            }
 			println builds
 		}
 	}
