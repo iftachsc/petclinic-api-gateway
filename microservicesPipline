@@ -9,6 +9,8 @@ node{
 	builds = selector.related( "builds" )
 	println builds
 	sh('oc whoami')
+	sh('ls')
+	println('-------------')
 	def scmVars = checkout scm
 	sh('ls')
 	
