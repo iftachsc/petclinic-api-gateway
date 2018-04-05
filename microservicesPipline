@@ -8,10 +8,11 @@
 	
 	openshift.withCluster() {
 		openshift.withProject('cicd') {
-			def selector = openshift.selector("bc", "api-gateway-microservice-pipeline")
+			def selector = openshift.selector("build", env.BUILD_TAG)
 			selector.describe()
-			def buildConfig = selector.object()
-			builds = buildConfig.related( "builds" )
+			def build = selector.object()
+			println build.status.phase
+			//def = builds = buildConfig.related( "builds" )
 			
 			def commit  = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 			sh("git branch --contains ${commit}")
