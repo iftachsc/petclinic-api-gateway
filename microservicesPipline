@@ -8,7 +8,9 @@
 	
 	openshift.withCluster() {
 		openshift.withProject('cicd') {
-			def selector = openshift.selector("build", env.BUILD_TAG)
+			def reg = ~/^jenkins-cicd-/   
+			def currentBuild = env.BUILD_TAG - reg
+			def selector = openshift.selector("build", currentBuild)
 			selector.describe()
 			def build = selector.object()
 			println build.status.phase
