@@ -3,22 +3,29 @@
 	println(env.getEnvironment().collect({environmentVariable ->  "${environmentVariable.key} = ${environmentVariable.value}"}).join("\n"))
 node{
 	
-	def selector = openshift.selector("bc", "api-gateway-microservice-pipeline")
-	def builds
-	//selector.object()
-	builds = selector.related( "builds" )
-	println builds
-	sh('oc whoami')
-	sh('ls')
-	println('-------------')
-	def scmVars = checkout scm
-	sh('ls')
 	
 	def projectDisplayName = "api-gateway-${scmVars.GIT_BRANCH}-${scmVars.GIT_COMMIT}"
+	
 	openshift.withCluster() {
-		openshift.newProject("integ-${scmVars.GIT_COMMIT}","--display-name", projectDisplayName)
-		
-	//println builds[0].object().status.phase
+		openshift.withProject('cicd') {
+			def selector = openshift.selector("bc", "api-gateway-microservice-pipeline")
+			
+			def buildConfig = selector.object()
+			builds = buildConfig.related( "builds" )
+			
+			//selector.object()
+			builds = selector.related( "builds" )
+			println builds
+			sh('oc whoami')
+			
+			println('-------------')
+			//def scmVars = checkout scm
+			sh('ls')
+			
+			//openshift.newProject("integ-${scmVars.GIT_COMMIT}","--display-name", projectDisplayName)
+			
+			println builds
+		}
 	}
 }
 
