@@ -1,6 +1,6 @@
 
-def  microservices = ["vet-service", "visit-service", "customer-service"]
-
+	def  microservices = ["vet-service", "visit-service", "customer-service"]
+	env.each { name, value -> println "Name: $name -> Value $value" }
 node{
 	
 	def selector = openshift.selector("bc", "api-gateway-microservice-pipeline")
@@ -10,7 +10,7 @@ node{
 	println builds
 	sh('oc whoami')
 	def scmVars = checkout scm
-	println scmVars
+	sh('ls')
 	
 	def projectDisplayName = "api-gateway-${scmVars.GIT_BRANCH}-${scmVars.GIT_COMMIT}"
 	openshift.withCluster() {
