@@ -14,10 +14,8 @@
 			
 			selector.object()
 			builds = selector.related( "builds" )
-			builds.untilEach {
-                println it.object().status
-                	return true
-            }
+			def commit  = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+			sh("git branch --contains ${commit}")
 			sh('oc whoami')
 			
 			println('-------------')
