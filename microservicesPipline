@@ -11,14 +11,14 @@
 			def reg = ~/^jenkins-cicd-/   
 			def currentBuild = env.BUILD_TAG - reg
 			def selector = openshift.selector("build", currentBuild)
-			selector.describe()
+			//selector.describe()
 			
 			def build = selector.object()
 			println build.status.phase
 			def rev = build.spec.triggeredBy[0].githubWebHook.revision.git
 			def commit = rev.commit
 			def commiter = rev.commiter
-			
+			sh('ls')
 			//def = builds = buildConfig.related( "builds" )
 			
 			//def commit  = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
@@ -29,7 +29,7 @@
 			
 			
 			//def scmVars = checkout scm
-			sh('ls')
+			
 			
 			openshift.newProject("integ-${branch}-${commit}","--display-name", projectDisplayName)
 			
