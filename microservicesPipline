@@ -24,18 +24,14 @@
 			
 			//def commit  = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 			sh("git branch --contains ${commit}")
+			
 			def branch = sh(script: "git branch --contains ${commit}", returnStdout: true).trim()
+			println branch
 			//sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-			sh('oc whoami')
+			//sh('oc whoami')
 			
-			
-			//def scmVars = checkout scm
-			
-			
-			openshift.newProject("integ-${branch}-${commit}","--display-name", projectDisplayName)
-			
-			println builds
 		}
+		openshift.newProject("integ-${branch}-${commit}","--display-name", projectDisplayName)
 	}
 }
 
