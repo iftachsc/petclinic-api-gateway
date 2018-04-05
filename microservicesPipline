@@ -76,3 +76,4 @@ node{
 def version() {
   return sh(returnStdout: true, script: 'npm version preminor').trim()
 }
+
