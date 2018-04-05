@@ -13,7 +13,7 @@
 			def buildConfig = selector.object()
 			builds = buildConfig.related( "builds" )
 			
-			//selector.object()
+			selector.object()
 			builds = selector.related( "builds" )
 			builds.untilEach {
                 println it.object().status
