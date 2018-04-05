@@ -3,19 +3,21 @@ def  microservices = ["vet-service", "visit-service", "customer-service"]
 
 node{
 	
-	def selector = openshift.selector("bc", "petclinic-microservices-pipeline")
+	def selector = openshift.selector("bc", "api-gateway-microservice-pipeline")
 	def builds
 	//selector.object()
 	builds = selector.related( "builds" )
 	println builds
 	
 	def scmVars = checkout scm
-	
-	openshift.newProject( 'test' )
-	openshift.deleteProject( 'test' )
+	openshift.withCluster() {
+		openshift.newProject( 'test' )
+		
+		
 	//println builds[0].object().status.phase
-
+	}
 }
+
 //node('maven') {
 //   
 //   def scmHost = '104.199.69.19'
