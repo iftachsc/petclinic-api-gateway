@@ -1,0 +1,72 @@
+
+def  microservices = ["vet-service", "visit-service", "customer-service"]
+
+node{
+	
+	def selector = openshift.selector("bc", "petclinic-microservices-pipeline")
+	def builds
+	//selector.object()
+	builds = selector.related( "builds" )
+	println builds
+	
+	def scmVars = checkout scm
+	
+	openshift.newProject( 'test' )
+	openshift.deleteProject( 'test' )
+	//println builds[0].object().status.phase
+
+}
+//node('maven') {
+//   
+//   def scmHost = '104.199.69.19'
+//   def devEnv = 'dev'
+//   def stageEnv = 'staging'
+//   def appName = 'host-id'
+//   
+//   stage('Git checkout') {
+//	 //step([$class: 'WsCleanup'])
+//     //println payload
+//	 sh('env')
+//     //checkout([$class: "GitSCM", branches: [[name: "*/${nationalParksBranch}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: "RelativeTargetDirectory", relativeTargetDir: "nationalparks"]], submoduleCfg: [], userRemoteConfigs: [[url: "${nationalParksURL}"]]])
+//     
+//   }
+//   //sh "oc new-app -f nationalparks/ose3/pipeline-buildconfig-template.json -p GIT_URI=${nationalParksURL} -p GIT_REF=${nationalParksBranch} -n ${project} --dry-run -o yaml | oc apply -f - -n ${project}"
+//   stage ('Git Checkout') {
+//     git branch: 'master', url: "http://${scmHost}/root/hostid.git"
+//     sh 'git config --global user.email "iftachsc@innercloud.io"'
+//   }
+//   stage ('Test') {
+//     sh 'npm  test'
+//   }
+//   stage ('Openshift Build') {
+//     sh "oc start-build hostidapp --wait=true -n ${devEnv}"
+//   }
+//   stage ('Deploy DEV') {
+//     sh "oc rollout latest ${host-id} -n ${devEnv}"
+//   }
+//   stage ('Deploy STAGE') {
+//     timeout(time:15, unit:'MINUTES') {
+//        input message: "Promote to STAGING?", ok: "Promote to Staging env"
+//     }
+//     try{
+//       //def v = version()
+//       // promote image
+//       sh "oc tag ${devEnv}/${appName}":latest ${stageEnv}/${appName}:staging"
+//       sh "oc tag shalom/hostidapp:latest shalom-stage/hostidapp:latest"
+//     
+//       // deploy stage image
+//       sh "oc rollout staging ${appName} -n ${stageEnv}"
+//     }
+//     catch(Exception ex) {
+//       println('Something went wrong')
+//     }  
+//   }
+//   stage('Send Notifications'){
+//     //email(receipeints: CommiterProvider);
+//     sleep 5
+//   }
+//}
+
+def version() {
+  return sh(returnStdout: true, script: 'npm version preminor').trim()
+}
