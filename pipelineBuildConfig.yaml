@@ -5,7 +5,7 @@ metadata:
 spec:
   source:
     git:
-      uri: "https://github.com/iftachsc/api-gateway.git"
+      uri: "https://github.com/iftachsc/petclinic-api-gateway.git"
   strategy:
     jenkinsPipelineStrategy:
       jenkinsfilePath: microservicesPipline
