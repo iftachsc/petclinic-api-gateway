@@ -8,7 +8,7 @@ node{
 	//selector.object()
 	builds = selector.related( "builds" )
 	println builds
-	
+	sh('oc whoami')
 	def scmVars = checkout scm
 	openshift.withCluster() {
 		openshift.newProject( 'test' )
