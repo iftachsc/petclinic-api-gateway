@@ -22,7 +22,7 @@
 			sh('ls')
 			
 			sh("git checkout ${commit}")
-			sh('git pull')
+			sh('git fetch')
 			//def = builds = buildConfig.related( "builds" )
 			//def commit  = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 			
