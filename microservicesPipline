@@ -4,7 +4,7 @@
 node{
 	
 	
-	def projectDisplayName = "api-gateway-${scmVars.GIT_BRANCH}-${scmVars.GIT_COMMIT}"
+	//def projectDisplayName = "api-gateway-${scmVars.GIT_BRANCH}-${scmVars.GIT_COMMIT}"
 	
 	openshift.withCluster() {
 		openshift.withProject('cicd') {
