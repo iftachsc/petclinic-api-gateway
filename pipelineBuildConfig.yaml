@@ -5,7 +5,14 @@ metadata:
 spec:
   source:
     git:
-      uri: "https://github.com/iftachsc/petclinic-api-gateway.git"
+      ref: feature1
+      uri: 'https://github.com/iftachsc/petclinic-api-gateway.git'
+    type: Git
   strategy:
     jenkinsPipelineStrategy:
       jenkinsfilePath: microservicesPipline
+    type: JenkinsPipeline
+  triggers:
+    - github:
+        secret: secret101
+      type: GitHub
