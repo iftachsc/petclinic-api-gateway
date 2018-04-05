@@ -1,6 +1,6 @@
 
 	def  microservices = ["vet-service", "visit-service", "customer-service"]
-	env.each { name, value -> println "Name: $name -> Value $value" }
+	println(env.getEnvironment().collect({environmentVariable ->  "${environmentVariable.key} = ${environmentVariable.value}"}).join("\n"))
 node{
 	
 	def selector = openshift.selector("bc", "api-gateway-microservice-pipeline")
