@@ -20,8 +20,9 @@
 			def commit = rev.commit
 			def commiter = rev.commiter
 			sh('ls')
-			sh('git checkout master')
+			
 			sh("git checkout ${commit}")
+			sh('git pull')
 			//def = builds = buildConfig.related( "builds" )
 			//def commit  = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 			
