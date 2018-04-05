@@ -12,12 +12,15 @@
 			def currentBuild = env.BUILD_TAG - reg
 			def selector = openshift.selector("build", currentBuild)
 			selector.describe()
+			
 			def build = selector.object()
 			println build.status.phase
+			println build.spec.triggeredBy[0].githubWebHook.revision.git.commit
+			println build.spec.triggeredBy[0].githubWebHook.revision.git.committer.name
 			//def = builds = buildConfig.related( "builds" )
 			
 			def commit  = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-			sh("git branch --contains ${commit}")
+			sh("git branch --contains ${build.spec.triggeredBy[0].githubWebHook.revision.git.committer.name}")
 			sh('oc whoami')
 			
 			println('-------------')
