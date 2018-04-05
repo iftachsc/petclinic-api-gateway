@@ -20,10 +20,10 @@
 			def commit = rev.commit
 			def commiter = rev.commiter
 			sh('ls')
+			sh('git pull')
 			//def = builds = buildConfig.related( "builds" )
 			
 			//def commit  = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-			sh("git branch --contains ${commit}")
 			
 			def branch = sh(script: "git branch --contains ${commit}", returnStdout: true).trim()
 			println branch
@@ -31,7 +31,7 @@
 			//sh('oc whoami')
 			
 		}
-		openshift.newProject("integ-${branch}-${commit}","--display-name", projectDisplayName)
+		openshift.newProject("integ-${branch}-${commit}","--display-name", "integ-${branch}-${commit}")
 	}
 }
 
