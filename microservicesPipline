@@ -8,8 +8,7 @@
 	
 	openshift.withCluster() {
 		openshift.withProject('cicd') {
-			''
-			
+			def selector = openshift.selector("oc", "api-gateway-microservice-pipeline")
 			def buildConfig = selector.object()
 			builds = buildConfig.related( "builds" )
 			
