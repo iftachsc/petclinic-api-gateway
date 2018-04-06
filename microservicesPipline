@@ -4,6 +4,11 @@ def microservices = ["api-gateway","vet-service", "visit-service", "customer-ser
 def otherMicoservices
 def thisMicroservice = null
 def javaS2iImage = "redhat-openjdk18-openshift:1.2"
+def customerDbUser = "mysql"
+def customerDbPwd = "mysql"
+def customerDbName = "customer_db"
+def customerDbServiceHost = "customer-db"
+def customerDbServicePort = "3306"
 
 	  
 //println(env.getEnvironment().collect({environmentVariable ->  "${environmentVariable.key} = ${environmentVariable.value}"}).join("\n"))
@@ -64,15 +69,42 @@ node{
 		openshift.withCluster() {
 			openshift.withProject(integProject) {
 				
+				//deploy mysql for customer-service
+				prtinln "Creating Database service for customer-service"
+				openshift.newApp("mysql-persistent","-p","MYSQL_USER=${customerDbUser}",
+						                            "-p","MYSQL_PASSWORD=${customerDbPwd}",
+						                            "-p","MYSQL_DATABASE=${customerDbName}",
+						                            "-p","DATABASE_SERVICE_NAME=${customerDbServiceHost}")
+				                            	
 				otherMicoservices.each {
 					println "Creating microservice ${it} in project ${integProject}"
-					openshift.newApp("${javaS2iImage}~${microservicesGitBase}-${it}","--name",it)
+					if(it == "customer-service") {
+						openshift.newApp("${javaS2iImage}~${microservicesGitBase}-${it}","--name",it,
+														   "-e","DB_USERNAME=${customerDbUser}",
+								                            "-e","DB_PASSWORD=${customerDbPwd}",
+								                            "-e","DB_NAME=${customerDbName}",
+								                            "-e","DB_HOST=${customerDbServiceHost}",
+								                            "-e","DB_PORT=${customerDbServicePort}")
+
+					}
+					else {
+						openshift.newApp("${javaS2iImage}~${microservicesGitBase}-${it}","--name",it)
+					}
 				}
+				println "Deploying this microservice: ${thisMicroservice}"
+				openshift.newApp("new-app ${javaS2iImage}~./","--name", thisMicroservice)
+				
+				println "Verifying deployments:"
+				otherMicoservices.each {
+					println "Verifying microservice deployemtn for ${it}"
+					openshiftVerifyDeployment(deploymentConfig: it,waitTime: 30000)
+				}
+				sh('oc expose service api-gateway')
 			}
-			
 		}
-		
 	}
+	
+	stage('Run tests') {}
 }
 
 //node('maven') {
