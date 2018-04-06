@@ -95,14 +95,13 @@ node{
 				openshift.newApp("${javaS2iImage}~./","--name", thisMicroservice)
 				
 				println "Verifying deployments:"
-				otherMicoservices.each {
-					println "Verifying microservice deployemtn for ${it}"
+				microservices.each {
+					println "Verifying microservice deployment ${it}"
 					//openshiftVerifyDeployment(deploymentConfig: it,waitTime: 30000)
 					
-					
 					def dcSelector = openshift.selector("dc", it)
-					def dc = dcSelector.object()
-					dc.related('pods').untilEach(1) {
+					dcSelector.object()
+					dcSelector.related('pods').untilEach(1) {
 	                    println "wait for pods ${id} to run"
 	                    println("YAY:" + it.object().status.phase)
 	                    if (it.object().status.phase == 'Runnin') {
