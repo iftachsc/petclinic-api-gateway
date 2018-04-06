@@ -92,7 +92,7 @@ node{
 					}
 				}
 				println "Deploying this microservice: ${thisMicroservice}"
-				openshift.newApp("new-app ${javaS2iImage}~./","--name", thisMicroservice)
+				openshift.newApp("${javaS2iImage}~./","--name", thisMicroservice)
 				
 				println "Verifying deployments:"
 				otherMicoservices.each {
