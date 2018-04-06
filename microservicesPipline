@@ -101,21 +101,19 @@ node{
 					
 					def dcSelector = openshift.selector("dc", it)
 					dcSelector.object()
-					dcSelector.related('pods').untilEach {
-	                    println "wait for pods ${id} to run"
-	                    println("YAY:" + it.object().status.phase)
-	                    if (it.object().status.phase == 'Running') {
-	                    // some example debug of the pod in question
-	                        shortname = it.object().metadata.name
-	                        echo openshift.rsh("${shortname}", "ps ax").out
-	                        return true;
-	                    }
-	                    return false;
-	                }
-					println build.status.phase
-					def rev = build.spec.triggeredBy[0].githubWebHook.revision.git
-					commit = rev.commit
-					committer = rev.committer
+					timeout(30) {
+						dcSelector.related('pods').untilEach {
+		                    println "wait for pods ${id} to run"
+		                    println("YAY:" + it.object().status.phase)
+		                    if (it.object().status.phase == 'Running') {
+		                    // some example debug of the pod in question
+		                        shortname = it.object().metadata.name
+		                        echo openshift.rsh("${shortname}", "ps ax").out
+		                        return true;
+		                    }
+		                    return false;
+		                }
+					}
 				}
 			}
 		}
