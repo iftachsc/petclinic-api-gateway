@@ -18,7 +18,7 @@ node{
 	}
 	stage('Code Coverage'){
 		//sh('mvn jacoco')
-		sleep(3000)
+		sleep(5)
 	}
 	stage('Create project for integ') {
 	//def projectDisplayName = "api-gateway-${scmVars.GIT_BRANCH}-${scmVars.GIT_COMMIT}"
