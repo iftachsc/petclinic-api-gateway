@@ -30,7 +30,7 @@ node{
 				def reg = ~/^jenkins-cicd-/   
 				def currentBuild = env.BUILD_TAG - reg
 				thisMicroservice = currentBuild.replace("-microservice-pipeline-${env.BUILD_NUMBER}","")
-				otherMicoservices = microservices.removeAll{ it == thisMicroservice}
+				otherMicoservices = microservices - thisMicroservice  //microservices.removeAll{ it == thisMicroservice}
 				println("This microservice: ${thisMicroservice}")
 				
 				def selector = openshift.selector("build", currentBuild)
