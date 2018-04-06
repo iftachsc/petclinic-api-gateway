@@ -8,7 +8,7 @@
 	def commit = ''
 	openshift.withCluster() {
 		openshift.withProject('cicd') {
-			checkout scm
+			//checkout scm
 			def reg = ~/^jenkins-cicd-/   
 			def currentBuild = env.BUILD_TAG - reg
 			def selector = openshift.selector("build", currentBuild)
