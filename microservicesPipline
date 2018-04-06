@@ -1,9 +1,11 @@
 
-def microservicesGitBase = 'https://github.com/iftachsc/petclinic-'
+def microservicesGitBase = 'https://github.com/iftachsc/petclinic'
 def microservices = ["api-gateway","vet-service", "visit-service", "customer-service"]
 def otherMicoservices
 def thisMicroservice = null
+def javaS2iImage = "redhat-openjdk18-openshift:1.2"
 
+	  
 //println(env.getEnvironment().collect({environmentVariable ->  "${environmentVariable.key} = ${environmentVariable.value}"}).join("\n"))
 def commit = null
 def committer = null
@@ -60,12 +62,11 @@ node{
 	
 	stage('Creating Openshift Apps'){
 		openshift.withCluster() {
-			openshift.withProject('cicd') {
-				otherMicoservices
-				//openshift.newApp("nodejs-example")
+			openshift.withProject(integProject) {
 				
 				otherMicoservices.each {
-				    println "Letter ${it}"
+					println "Creating microservice ${it} in project ${integProject}"
+					openshift.newApp("${javaS2iImage}~${microservicesGitBase}-${it}","--name",it)
 				}
 			}
 			
