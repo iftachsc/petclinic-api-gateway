@@ -23,6 +23,8 @@
 			
 			sh('ls')
 			sh("git checkout ${commit}")
+			sh("git fetch")
+
 			sh('git status')
 			//sh('git fetch')
 			//def = builds = buildConfig.related( "builds" )
