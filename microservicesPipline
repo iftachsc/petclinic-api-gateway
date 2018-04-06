@@ -95,9 +95,24 @@ node{
 				openshift.newApp("${javaS2iImage}~./","--name", thisMicroservice)
 				
 				println "Verifying builds:"
+				timeout(120) {
+					
+					def allBuildsFinished = false
+					microservices.each {
+						def buildSel = openshift.selector("bc", "${it}")
+						buildSel.related('pods').untilEach(1) {
+							//def buildStatus = sh(script: "oc get build ${it}-1 -o jsonpath='{.status.phase}'", returnStdout: true).trim()
+							//since its the only build its #1
+							return it.object().status.phase == "Complete"
+						}
+						return false
+					}
+					return allBuildsFinished
+				
+				}
 				microservices.each {
 					println "Verifying microservice build ${it}"
-					openshiftVerifyBuild(buildConfig: it,waitTime: 30000)
+					//openshiftVerifyBuild(buildConfig: it,waitTime: 30000)
 					
 					def dcSelector = openshift.selector("dc", it)
 					dcSelector.object()
