@@ -19,8 +19,9 @@
 			def rev = build.spec.triggeredBy[0].githubWebHook.revision.git
 			commit = rev.commit
 			def commiter = rev.commiter
-			sh('ls')
+			sh('git status')
 			
+			sh('ls')
 			sh("git checkout ${commit}")
 			//sh('git fetch')
 			//def = builds = buildConfig.related( "builds" )
@@ -32,7 +33,7 @@
 			//sh('oc whoami')
 			
 		}
-		openshift.newProject("integ-${commit}","--display-name", "integ-${commit}")
+		//openshift.newProject("integ-${commit}","--display-name", "integ-${commit}")
 	}
 }
 
