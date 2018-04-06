@@ -122,8 +122,13 @@ node{
 						}	
 					}
 				}
-				sh("oc expose svc api-gateway")
-				def apiGwEndpoint = sh(returnStdout: true, script: "oc get route -l app=api-gateway -o jsonpath='{.items[0].spec.host}'").trim()
+				sh('oc get svc')
+				sleep(20) {
+					sh('oc get svc')
+					sh("oc expose svc api-gateway")	
+				}
+				
+				//def apiGwEndpoint = sh(returnStdout: true, script: "oc get route -l app=api-gateway -o jsonpath='{.items[0].spec.host}'").trim()
 
 				//api call - add owner
 				def apiCommand = "curl -H \"Content-Type: application/json\" -X POST " + 
