@@ -5,7 +5,7 @@ def thisMicroservice = null
 
 //println(env.getEnvironment().collect({environmentVariable ->  "${environmentVariable.key} = ${environmentVariable.value}"}).join("\n"))
 def commit = null
-def commiter = null
+def committer = null
 def integProject = null
 def integProjectDisplay = null
 node{
@@ -28,7 +28,7 @@ node{
 				
 				def reg = ~/^jenkins-cicd-/   
 				def currentBuild = env.BUILD_TAG - reg
-				thisMicroservice = currentBuild.replace("-microservice-pipeline-","")
+				thisMicroservice = currentBuild.replace("-microservice-pipeline-${env.BUILD_NUMBER}","")
 				println("This microservice: ${thisMicroservice}")
 				
 				def selector = openshift.selector("build", currentBuild)
@@ -38,8 +38,9 @@ node{
 				println build.status.phase
 				def rev = build.spec.triggeredBy[0].githubWebHook.revision.git
 				commit = rev.commit
-				commiter = rev.commiter
-				
+				committer = rev.committer
+				println "Committer: ${committer}"
+				println "Commit: ${commit}"
 				//def = builds = buildConfig.related( "builds" )
 				//def commit  = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 				//def branch = sh(script: "git remote branch --contains ${commit}", returnStdout: true).trim()
