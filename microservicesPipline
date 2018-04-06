@@ -100,7 +100,7 @@ node{
 					def allBuildsFinished = false
 					microservices.each {
 						def buildSel = openshift.selector("bc", "${it}")
-						buildSel.related('pods').untilEach(1) {
+						buildSel.related('builds').untilEach(1) {
 							//def buildStatus = sh(script: "oc get build ${it}-1 -o jsonpath='{.status.phase}'", returnStdout: true).trim()
 							//since its the only build its #1
 							return it.object().status.phase == "Complete"
