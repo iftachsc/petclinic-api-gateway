@@ -94,7 +94,7 @@ node{
 				openshift.newApp("${javaS2iImage}~./","--name", thisMicroservice)
 				
 				println "Verifying builds:"
-				timeout(15) {
+				timeout(20) {
 					
 					def allBuildsFinished = false
 					microservices.each {
