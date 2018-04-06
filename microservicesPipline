@@ -61,7 +61,7 @@ node{
 		openshift.withCluster() {
 			openshift.withProject('cicd') {
 				otherMicoservices
-				openshift.newApp("nodejs-example")
+				//openshift.newApp("nodejs-example")
 				
 				otherMicoservices.each {
 				    println "Letter ${it}"
