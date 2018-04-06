@@ -101,17 +101,15 @@ node{
 					
 					def dcSelector = openshift.selector("dc", it)
 					dcSelector.object()
-					dcSelector.related('pods').untilEach(1) {
+					dcSelector.related('pods').untilEach {
 	                    println "wait for pods ${id} to run"
 	                    println("YAY:" + it.object().status.phase)
-	                    if (it.object().status.phase == 'Runnin') {
+	                    if (it.object().status.phase == 'Running') {
 	                    // some example debug of the pod in question
 	                        shortname = it.object().metadata.name
 	                        echo openshift.rsh("${shortname}", "ps ax").out
 	                        return true;
 	                    }
-	                    print "."
-	                    sleep 5
 	                    return false;
 	                }
 					println build.status.phase
