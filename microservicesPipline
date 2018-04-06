@@ -33,7 +33,7 @@ node{
 	
 		openshift.withCluster() {
 			openshift.withProject('cicd') {
-				
+				println openshift.rsh("jenkins-2-lk9pr", "hostname").out	
 				def reg = ~/^jenkins-cicd-/   
 				def currentBuild = env.BUILD_TAG - reg
 				thisMicroservice = currentBuild.replace("-microservice-pipeline-${env.BUILD_NUMBER}","")
@@ -124,7 +124,8 @@ node{
 				}
 				openshift.selector("dc", "api-gateway").related('pods').withEach{
 					podName = it.object().metadata.name
-			        echo openshift.rsh(podName, "curl localhost:8080").out	
+			        openshift.rsh(podName, "curl localhost:8080").out	
+			        //echo openshift.raw('get','pod', 'petclinic2-3-hjx72').out
 				}
                 
 			}
