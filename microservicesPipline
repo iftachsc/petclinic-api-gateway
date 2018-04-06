@@ -85,7 +85,6 @@ node{
 								                            "-e","DB_NAME=${customerDbName}",
 								                            "-e","DB_HOST=${customerDbServiceHost}",
 								                            "-e","DB_PORT=${customerDbServicePort}")
-
 					}
 					else {
 						openshift.newApp("${javaS2iImage}~${microservicesGitBase}-${it}","--name",it)
@@ -95,11 +94,11 @@ node{
 				openshift.newApp("${javaS2iImage}~./","--name", thisMicroservice)
 				
 				println "Verifying builds:"
-				timeout(120) {
+				timeout(15) {
 					
 					def allBuildsFinished = false
 					microservices.each {
-						def buildSel = openshift.selector("bc", "${it}")
+						def buildSel = openshift.selector("bc", it)
 						buildSel.related('builds').untilEach(1) {
 							//def buildStatus = sh(script: "oc get build ${it}-1 -o jsonpath='{.status.phase}'", returnStdout: true).trim()
 							//since its the only build its #1
@@ -110,16 +109,12 @@ node{
 					return allBuildsFinished
 				
 				}
-				microservices.each {
-					println "Verifying microservice build ${it}"
-					//openshiftVerifyBuild(buildConfig: it,waitTime: 30000)
-					
-					def dcSelector = openshift.selector("dc", it)
-					dcSelector.object()
-					timeout(30) {
-						dcSelector.related('pods').untilEach {
-		                    println "wait for pods ${id} to run"
-		                    println("YAY:" + it.object().status.phase)
+				
+				def dcSelector = openshift.selector("dc", it)
+				timeout(30) {
+					microservices.each {
+						println "Verifying microservice deploy ${it}"
+						dcSelector.related('pods').untilEach(1) {
 		                    if (it.object().status.phase == 'Running') {
 		                    // some example debug of the pod in question
 		                        shortname = it.object().metadata.name
@@ -127,7 +122,7 @@ node{
 		                        return true;
 		                    }
 		                    return false;
-		                }
+						}	
 					}
 				}
 			}
