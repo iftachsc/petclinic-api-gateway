@@ -22,9 +22,9 @@
 			
 			
 			sh('ls')
-			sh('git status')
+			
 
-			sh("git checkout ${commit}")
+			//sh("git checkout ${commit}") - done by sc,
 			sh("git fetch")
 
 			sh('git status')
@@ -32,8 +32,8 @@
 			//def = builds = buildConfig.related( "builds" )
 			//def commit  = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 			
-			//def branch = sh(script: "git branch --contains ${commit}", returnStdout: true).trim()
-			//println branch
+			def branch = sh(script: "git remote branch --contains ${commit}", returnStdout: true).trim()
+			println branch
 			//sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 			//sh('oc whoami')
 			
