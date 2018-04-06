@@ -19,10 +19,11 @@
 			def rev = build.spec.triggeredBy[0].githubWebHook.revision.git
 			commit = rev.commit
 			def commiter = rev.commiter
-			sh('git status')
+			
 			
 			sh('ls')
 			sh("git checkout ${commit}")
+			sh('git status')
 			//sh('git fetch')
 			//def = builds = buildConfig.related( "builds" )
 			//def commit  = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
