@@ -1,6 +1,7 @@
 
 def microservicesGitBase = 'https://github.com/iftachsc/petclinic-'
 def microservices = ["api-gateway","vet-service", "visit-service", "customer-service"]
+def otherMicoservices
 def thisMicroservice = null
 
 //println(env.getEnvironment().collect({environmentVariable ->  "${environmentVariable.key} = ${environmentVariable.value}"}).join("\n"))
@@ -29,6 +30,7 @@ node{
 				def reg = ~/^jenkins-cicd-/   
 				def currentBuild = env.BUILD_TAG - reg
 				thisMicroservice = currentBuild.replace("-microservice-pipeline-${env.BUILD_NUMBER}","")
+				otherMicoservices = microservices.removeAll{ it == thisMicroservice}
 				println("This microservice: ${thisMicroservice}")
 				
 				def selector = openshift.selector("build", currentBuild)
@@ -49,7 +51,7 @@ node{
 				//sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 				//sh('oc whoami')
 				integProject = "integration-${thisMicroservice}-${env.BUILD_NUMBER}"
-				integProjectDisplay = "Integ Tests ${thisMicroservice} # {env.BUILD_NUMBER}"
+				integProjectDisplay = "Integ Tests ${thisMicroservice} #${env.BUILD_NUMBER}"
 			}
 			openshift.newProject(integProject,"--display-name", "\"${integProjectDisplay}\"","--description","\"commit: ${commit}, committer: ${committer.name}\"")
 		}
@@ -58,9 +60,12 @@ node{
 	stage('Creating Openshift Apps'){
 		openshift.withCluster() {
 			openshift.withProject('cicd') {
+				otherMicoservices
+				openshift.newApp("nodejs-example")
 				
-			
-				
+				otherMicoservices.each {
+				    println "Letter ${it}"
+				}
 			}
 			
 		}
