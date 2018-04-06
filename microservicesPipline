@@ -110,27 +110,32 @@ node{
 				
 				}
 				
-				def dcSelector = openshift.selector("dc", it)
 				timeout(30) {
 					microservices.each {
+						def dcSelector = openshift.selector("dc", it)
 						println "Verifying microservice deploy ${it}"
 						dcSelector.related('pods').untilEach(1) {
 		                    if (it.object().status.phase == 'Running') {
-		                    // some example debug of the pod in question
-		                        shortname = it.object().metadata.name
-		                        echo openshift.rsh("${shortname}", "ps ax").out
 		                        return true;
 		                    }
 		                    return false;
 						}	
 					}
 				}
+				openshift.selector("dc", "api-gateway").related('pods').withEach{
+					podName = it.object().metadata.name
+			        echo openshift.rsh(podName, "curl localhost:8080").out	
+				}
+                
 			}
 		}
 	}
 	
 	stage('Run tests') {}
 }
+
+//// curl http://api-gateway-integration-api-gateway-45.apps.cloudzone.com/api/customer/owners
+// {"firstName":"iftach","lastName":"schonbaum","address":"25th Helsinki st.","city":"Tel Aviv","telephone":"0528288288"}
 
 //node('maven') {
 //   
