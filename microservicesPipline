@@ -94,10 +94,10 @@ node{
 				println "Deploying this microservice: ${thisMicroservice}"
 				openshift.newApp("${javaS2iImage}~./","--name", thisMicroservice)
 				
-				println "Verifying deployments:"
+				println "Verifying builds:"
 				microservices.each {
-					println "Verifying microservice deployment ${it}"
-					//openshiftVerifyDeployment(deploymentConfig: it,waitTime: 30000)
+					println "Verifying microservice build ${it}"
+					openshiftVerifyBuild(buildConfig: it,waitTime: 30000)
 					
 					def dcSelector = openshift.selector("dc", it)
 					dcSelector.object()
