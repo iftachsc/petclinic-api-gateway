@@ -22,6 +22,8 @@
 			
 			
 			sh('ls')
+			sh('git status')
+
 			sh("git checkout ${commit}")
 			sh("git fetch")
 
