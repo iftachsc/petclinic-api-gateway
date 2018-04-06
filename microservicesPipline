@@ -70,7 +70,7 @@ node{
 			openshift.withProject(integProject) {
 				
 				//deploy mysql for customer-service
-				prtinln "Creating Database service for customer-service"
+				println "Creating Database service for customer-service"
 				openshift.newApp("mysql-persistent","-p","MYSQL_USER=${customerDbUser}",
 						                            "-p","MYSQL_PASSWORD=${customerDbPwd}",
 						                            "-p","MYSQL_DATABASE=${customerDbName}",
