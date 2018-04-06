@@ -1,45 +1,69 @@
 
-	def  microservices = ["vet-service", "visit-service", "customer-service"]
-	println(env.getEnvironment().collect({environmentVariable ->  "${environmentVariable.key} = ${environmentVariable.value}"}).join("\n"))
-	node{
-	
-	
+def microservicesGitBase = 'https://github.com/iftachsc/petclinic-'
+def microservices = ["api-gateway","vet-service", "visit-service", "customer-service"]
+def thisMicroservice = null
+
+//println(env.getEnvironment().collect({environmentVariable ->  "${environmentVariable.key} = ${environmentVariable.value}"}).join("\n"))
+def commit = null
+def commiter = null
+def integProject = null
+def integProjectDisplay = null
+node{
+		
+	stage('Unit Tests'){
+		checkout scm
+		sh('ls')
+		//sh('mvn compile test')
+		sh('git status')
+	}
+	stage('Code Coverage'){
+		//sh('mvn jacoco')
+		sleep(3000)
+	}
+	stage('Create project for integ') {
 	//def projectDisplayName = "api-gateway-${scmVars.GIT_BRANCH}-${scmVars.GIT_COMMIT}"
-	def commit = ''
-	openshift.withCluster() {
-		openshift.withProject('cicd') {
-			checkout scm
-			def reg = ~/^jenkins-cicd-/   
-			def currentBuild = env.BUILD_TAG - reg
-			def selector = openshift.selector("build", currentBuild)
-			//selector.describe()
+	
+		openshift.withCluster() {
+			openshift.withProject('cicd') {
+				
+				def reg = ~/^jenkins-cicd-/   
+				def currentBuild = env.BUILD_TAG - reg
+				thisMicroservice = currentBuild.replace("-microservice-pipeline-","")
+				println("This microservice: ${thisMicroservice}")
+				
+				def selector = openshift.selector("build", currentBuild)
+				//selector.describe()
+				
+				def build = selector.object()
+				println build.status.phase
+				def rev = build.spec.triggeredBy[0].githubWebHook.revision.git
+				commit = rev.commit
+				commiter = rev.commiter
+				
+				//def = builds = buildConfig.related( "builds" )
+				//def commit  = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+				//def branch = sh(script: "git remote branch --contains ${commit}", returnStdout: true).trim()
+				//sh("git log ${commit}..HEAD --ancestry-path  --oneline")
+				//println branch
+				//sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+				//sh('oc whoami')
+				integProject = "integration-${thisMicroservice}-${env.BUILD_NUMBER}"
+				integProjectDisplay = "Integ Tests ${thisMicroservice} # {env.BUILD_NUMBER}"
+			}
+			openshift.newProject(integProject,"--display-name", integProjectDisplay,"--description","commit: ${commit}, committer: ${committer}")
+		}
+	}
+	
+	stage('Creating Openshift Apps'){
+		openshift.withCluster() {
+			openshift.withProject('cicd') {
+				
 			
-			def build = selector.object()
-			println build.status.phase
-			def rev = build.spec.triggeredBy[0].githubWebHook.revision.git
-			commit = rev.commit
-			def commiter = rev.commiter
-			
-			
-			sh('ls')
-			
-
-			//sh("git checkout ${commit}") - done by sc,
-			sh("git fetch")
-
-			sh('git status')
-			//sh('git fetch')
-			//def = builds = buildConfig.related( "builds" )
-			//def commit  = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-			
-			//def branch = sh(script: "git remote branch --contains ${commit}", returnStdout: true).trim()
-			sh("git log ${commit}..HEAD --ancestry-path  --oneline")
-			//println branch
-			//sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-			//sh('oc whoami')
+				
+			}
 			
 		}
-		//openshift.newProject("integ-${commit}","--display-name", "integ-${commit}")
+		
 	}
 }
 
