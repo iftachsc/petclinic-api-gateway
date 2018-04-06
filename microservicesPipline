@@ -51,7 +51,7 @@ node{
 				integProject = "integration-${thisMicroservice}-${env.BUILD_NUMBER}"
 				integProjectDisplay = "Integ Tests ${thisMicroservice} # {env.BUILD_NUMBER}"
 			}
-			openshift.newProject(integProject,"--display-name", integProjectDisplay,"--description","commit: ${commit}, committer: ${committer}")
+			openshift.newProject(integProject,"--display-name", "\"${integProjectDisplay}\"","--description","\"commit: ${commit}, committer: ${committer.name}\"")
 		}
 	}
 	
