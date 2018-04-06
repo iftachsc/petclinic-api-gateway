@@ -33,7 +33,7 @@ node{
 	
 		openshift.withCluster() {
 			openshift.withProject('cicd') {
-				println openshift.rsh("jenkins-2-lk9pr", "hostname").out	
+					
 				def reg = ~/^jenkins-cicd-/   
 				def currentBuild = env.BUILD_TAG - reg
 				thisMicroservice = currentBuild.replace("-microservice-pipeline-${env.BUILD_NUMBER}","")
@@ -122,73 +122,32 @@ node{
 						}	
 					}
 				}
+				sh("oc expose svc api-gateway")
+				def apiGwEndpoint = sh(returnStdout: true, script: "oc get route -l app=api-gateway -o jsonpath='{.items[0].spec.host}'").trim()
+
+				//api call - add owner
+				def apiCommand = "curl -H \"Content-Type: application/json\" -X POST " + 
+						"-d  '{\"firstName\":\"iftach2\",\"lastName\":\"schonbaum\",\"address\":\"25th Helsinki st.\",\"city\":\"Tel Aviv\",\"telephone\":\"0528288288\"}' " +
+						"http://localhost:8080/api/customer/owners"
+			
+				println apiCommand
 				openshift.selector("dc", "api-gateway").related('pods').withEach{
 					podName = it.object().metadata.name
-			        openshift.rsh(podName, "curl localhost:8080").out	
+			        println sh(script: "oc rsh ${podName} ${apiCommand}",returnStdout: true).trim()	
 			        //echo openshift.raw('get','pod', 'petclinic2-3-hjx72').out
 				}
+				
+				def mysqlCommand = "mysql -umysql -pmysql -hlocalhost -e 'select * from owners' customer_db"
+				openshift.selector("dc", "customer-db").related('pods').withEach{
+					podName = it.object().metadata.name
+					def mysqlOut = sh(script: "oc rsh ${podName} ${apiCommand}",returnStdout: true).trim()	
+			        println mysqlOut
+				}
+				
                 
 			}
 		}
 	}
 	
 	stage('Run tests') {}
-}
-
-//// curl http://api-gateway-integration-api-gateway-45.apps.cloudzone.com/api/customer/owners
-// {"firstName":"iftach","lastName":"schonbaum","address":"25th Helsinki st.","city":"Tel Aviv","telephone":"0528288288"}
-
-//node('maven') {
-//   
-//   def scmHost = '104.199.69.19'
-//   def devEnv = 'dev'
-//   def stageEnv = 'staging'
-//   def appName = 'host-id'
-//   
-//   stage('Git checkout') {
-//	 //step([$class: 'WsCleanup'])
-//     //println payload
-//	 sh('env')
-//     //checkout([$class: "GitSCM", branches: [[name: "*/${nationalParksBranch}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: "RelativeTargetDirectory", relativeTargetDir: "nationalparks"]], submoduleCfg: [], userRemoteConfigs: [[url: "${nationalParksURL}"]]])
-//     
-//   }
-//   //sh "oc new-app -f nationalparks/ose3/pipeline-buildconfig-template.json -p GIT_URI=${nationalParksURL} -p GIT_REF=${nationalParksBranch} -n ${project} --dry-run -o yaml | oc apply -f - -n ${project}"
-//   stage ('Git Checkout') {
-//     git branch: 'master', url: "http://${scmHost}/root/hostid.git"
-//     sh 'git config --global user.email "iftachsc@innercloud.io"'
-//   }
-//   stage ('Test') {
-//     sh 'npm  test'
-//   }
-//   stage ('Openshift Build') {
-//     sh "oc start-build hostidapp --wait=true -n ${devEnv}"
-//   }
-//   stage ('Deploy DEV') {
-//     sh "oc rollout latest ${host-id} -n ${devEnv}"
-//   }
-//   stage ('Deploy STAGE') {
-//     timeout(time:15, unit:'MINUTES') {
-//        input message: "Promote to STAGING?", ok: "Promote to Staging env"
-//     }
-//     try{
-//       //def v = version()
-//       // promote image
-//       sh "oc tag ${devEnv}/${appName}":latest ${stageEnv}/${appName}:staging"
-//       sh "oc tag shalom/hostidapp:latest shalom-stage/hostidapp:latest"
-//     
-//       // deploy stage image
-//       sh "oc rollout staging ${appName} -n ${stageEnv}"
-//     }
-//     catch(Exception ex) {
-//       println('Something went wrong')
-//     }  
-//   }
-//   stage('Send Notifications'){
-//     //email(receipeints: CommiterProvider);
-//     sleep 5
-//   }
-//}
-
-def version() {
-  return sh(returnStdout: true, script: 'npm version preminor').trim()
 }
