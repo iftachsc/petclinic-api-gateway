@@ -10,6 +10,7 @@ def customerDbName = "customer_db"
 def customerDbServiceHost = "customer-db"
 def customerDbServicePort = "3306"
 def stagingProject = "petclinit-staging"
+def stagingVersion = '1.5.9'
 def cicdProject = "cicd"
 
 //println(env.getEnvironment().collect({environmentVariable ->  "${environmentVariable.key} = ${environmentVariable.value}"}).join("\n"))
@@ -79,8 +80,10 @@ node{
 				                            	
 				otherMicoservices.each {
 					println "Creating microservice ${it} in project ${integProject}"
+					def imageStream = "${stagingProject}/${it}:${stagingVersion}"
 					if(it == "customer-service") {
-						openshift.newApp("${javaS2iImage}~${microservicesGitBase}-${it}","--name",it,
+//						openshift.newApp("${javaS2iImage}~${microservicesGitBase}-${it}","--name",it,
+						openshift.newApp(imageStream,"--name",it,
 														   "-e","DB_USERNAME=${customerDbUser}",
 								                            "-e","DB_PASSWORD=${customerDbPwd}",
 								                            "-e","DB_NAME=${customerDbName}",
