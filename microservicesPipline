@@ -135,7 +135,7 @@ node{
 
 				//api call - add owner
 				def apiCommand = "curl -H \"Content-Type: application/json\" -X POST " + 
-						"-d  '{\"firstName\":\"iftach2\",\"lastName\":\"schonbaum\",\"address\":\"25th Helsinki st.\",\"city\":\"Tel Aviv\",\"telephone\":\"0528288288\"}' " +
+						"-d  '{\"firstName\":\"${integProject}\",\"lastName\":\"schonbaum\",\"address\":\"25th Helsinki st.\",\"city\":\"Tel Aviv\",\"telephone\":\"0528288288\"}' " +
 						"http://localhost:8080/api/customer/owners"
 			
 				println "executing ${apiCommand}"
@@ -149,7 +149,7 @@ node{
 				println "executing ${mysqlCommand}"
 				openshift.selector("dc", "customer-db").related('pods').withEach{
 					podName = it.object().metadata.name
-					def mysqlOut = sh(script: "oc rsh ${podName} ${apiCommand}",returnStdout: true).trim()	
+					def mysqlOut = sh(script: "oc rsh ${podName} ${mysqlCommand}",returnStdout: true).trim()	
 			        println mysqlOut
 				}
 				
