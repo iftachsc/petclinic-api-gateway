@@ -162,13 +162,18 @@ node{
 					if(mysqlOut.contains(integProject))
 					{
 						println("it contains. Promoting app to staging")
-						//promoting
-						sh("oc tag ${integProject}/${thisMicroservice}:latest ${stagingProject}/${thisMicroservice}:1.5.9")
 					}
 					else {
 						error("sql entry didnt contain expected content")
 					}
 				}
+			}
+		}
+	}
+	stage('Promiting images') {
+		openshift.withCluster() {
+			openshift.withProject(cicdProject) {
+				openshift.raw('tag',"${integProject}/${thisMicroservice}:latest","${stagingProject}/${thisMicroservice}:1.5.9")
 			}
 		}
 	}
