@@ -18,6 +18,8 @@ def commit = null
 def committer = null
 def integProject = null
 def integProjectDisplay = null
+def branch = null
+
 node{
 		
 	stage('Unit Tests'){
@@ -57,7 +59,9 @@ node{
 				
 				checkout([$class: 'GitSCM', branches: [[name: commit ]],
 				          userRemoteConfigs: [[url: "${microservicesGitBase}-${thisMicroservice}.git"]]])
-				sh('git status')
+				
+				branch = sh(script: "git branch --contains ${commit}", returnStdout: true).trim()
+				println "Branch: ${branch}"
 			}
 			
 			openshift.newProject(integProject,"--display-name", "\"${integProjectDisplay}\"","--description","\"commit: ${commit}, committer: ${committer.name}\"")
@@ -100,7 +104,7 @@ node{
 				
 				println "Deploying this microservice: ${thisMicroservice}"
 				//because of lang detection - we could just run it without the javaS2iImage
-				openshift.newApp("${javaS2iImage}~./","--name", thisMicroservice)
+				openshift.newApp("${javaS2iImage}~./#${branch}","--name", thisMicroservice)
 				
 				println "Verifying builds:"
 				timeout(10) {
