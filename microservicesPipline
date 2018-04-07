@@ -159,7 +159,7 @@ node{
 					podName = it.object().metadata.name
 					def mysqlOut = sh(script: "oc rsh ${podName} ${mysqlCommand}",returnStdout: true).trim()	
 					println mysqlOut
-					if(mysqlOut.contains(integProject))
+					if(mysqlOut.contains(integProject+"dif"))
 					{
 						println("it contains. Promoting app to staging")
 					}
