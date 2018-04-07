@@ -57,6 +57,7 @@ node{
 				
 				checkout([$class: 'GitSCM', branches: [[name: commit ]],
 				          userRemoteConfigs: [[url: "${microservicesGitBase}-${thisMicroservice}.git"]]])
+				sh('git status')
 			}
 			
 			openshift.newProject(integProject,"--display-name", "\"${integProjectDisplay}\"","--description","\"commit: ${commit}, committer: ${committer.name}\"")
