@@ -126,6 +126,8 @@ node{
 				openshift.raw('project',integProject)
 				openshift.raw('expose','svc',thisMicroservice)
 				
+				//waiting for springboot to turn up since no healthchecks
+				sleep(60)
 				//pay attension os openshift.raw will use withCluster/withProject context. but sh(oc) will take jenkins's
 				openshift.raw('project')
 				
@@ -144,6 +146,7 @@ node{
 				}
 				
 				def mysqlCommand = "mysql -umysql -pmysql -hlocalhost -e 'select * from owners' customer_db"
+				println "executing ${mysqlCommand}"
 				openshift.selector("dc", "customer-db").related('pods').withEach{
 					podName = it.object().metadata.name
 					def mysqlOut = sh(script: "oc rsh ${podName} ${apiCommand}",returnStdout: true).trim()	
