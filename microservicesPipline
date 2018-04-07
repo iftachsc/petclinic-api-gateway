@@ -134,7 +134,7 @@ node{
 				openshift.raw('expose','svc',thisMicroservice)
 				
 				//waiting for springboot to turn up since no healthchecks
-				sleep(60)
+				sleep(90)
 				//pay attension os openshift.raw will use withCluster/withProject context. but sh(oc) will take jenkins's
 				openshift.raw('project')
 				
