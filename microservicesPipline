@@ -20,7 +20,6 @@ node{
 		
 	stage('Unit Tests'){
 		checkout scm
-		sh('oc project')
 		sh('ls')
 		//sh('mvn compile test')
 		sh('git status')
