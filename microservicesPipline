@@ -81,9 +81,11 @@ node{
 				otherMicoservices.each {
 					println "Creating microservice ${it} in project ${integProject}"
 					def imageStream = "${stagingProject}/${it}:${stagingVersion}"
+					def integImageStream = "${integProject}/${it}:${stagingVersion}"
 					if(it == "customer-service") {
+						openshift.raw('tag',imageStream,integImageStream)
 //						openshift.newApp("${javaS2iImage}~${microservicesGitBase}-${it}","--name",it,
-						openshift.newApp(imageStream,"--name",it,
+						openshift.newApp(integImageStream,"--name",it,
 														   "-e","DB_USERNAME=${customerDbUser}",
 								                            "-e","DB_PASSWORD=${customerDbPwd}",
 								                            "-e","DB_NAME=${customerDbName}",
@@ -95,6 +97,7 @@ node{
 					}
 				}
 				println "Deploying this microservice: ${thisMicroservice}"
+				//because of lang detection - we could just run it without the javaS2iImage
 				openshift.newApp("${javaS2iImage}~./","--name", thisMicroservice)
 				
 				println "Verifying builds:"
