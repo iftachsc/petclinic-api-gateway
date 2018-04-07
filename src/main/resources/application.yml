@@ -10,7 +10,7 @@ zuul:
       url: http://visit-service:8080/
     customers-service: 
       path: /customer/**
-      url: http://customer-service:8080/
+      url: http://customer-service:8081/
     api-gateway: 
       path: /gateway/**
       url: http://localhost:8080/

@@ -23,14 +23,13 @@ def branch = null
 node{
 		
 	stage('Unit Tests'){
-		//checkout scm
 		sh('ls')
 		//sh('mvn compile test')
 		sh('git status')
 	}
 	stage('Code Coverage'){
 		//sh('mvn jacoco')
-		sleep(5)
+		sleep(3)
 	}
 	stage('Create project for integ') {
 	//def projectDisplayName = "api-gateway-${scmVars.GIT_BRANCH}-${scmVars.GIT_COMMIT}"
@@ -54,14 +53,16 @@ node{
 				committer = rev.committer
 				println "Committer: ${committer}"
 				println "Commit: ${commit}"
+				
 				integProject = "integ-tests-${thisMicroservice}-${env.BUILD_NUMBER}"
 				integProjectDisplay = "Integ Tests ${thisMicroservice} #${env.BUILD_NUMBER}"
 				
-				checkout([$class: 'GitSCM', branches: [[name: commit ]],
-				          userRemoteConfigs: [[url: "${microservicesGitBase}-${thisMicroservice}.git"]]])
 				
-				branch = sh(script: "git branch --contains ${commit}", returnStdout: true).trim()
-				println "Branch: ${branch}"
+				//checkout([$class: 'GitSCM', branches: [[name: commit ]],
+				//          userRemoteConfigs: [[url: "${microservicesGitBase}-${thisMicroservice}.git"]]])
+				
+				//branch = sh(script: "git branch --contains ${commit}", returnStdout: true).trim()
+				//println "Branch: ${branch}" //this prints detached from. even checkout scm know the branch with same command
 			}
 			
 			openshift.newProject(integProject,"--display-name", "\"${integProjectDisplay}\"","--description","\"commit: ${commit}, committer: ${committer.name}\"")
