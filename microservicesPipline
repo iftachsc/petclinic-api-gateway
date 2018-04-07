@@ -9,7 +9,7 @@ def customerDbPwd = "mysql"
 def customerDbName = "customer_db"
 def customerDbServiceHost = "customer-db"
 def customerDbServicePort = "3306"
-
+def stagingProject = "petclinit-staging"
 	  
 //println(env.getEnvironment().collect({environmentVariable ->  "${environmentVariable.key} = ${environmentVariable.value}"}).join("\n"))
 def commit = null
@@ -161,11 +161,11 @@ node{
 					if(mysqlOut.contains(integProject+"dif"))
 					{
 						println("it contains. Promoting app to staging")
+						sh("oc tag ${integProject}/${thisMicroservice}:latest ${stagingProject}/${thisMicroservice}:1.5.9")
 					}
 					else {
 						error("sql entry didnt contain expected content")
 					}
-			        
 				}
 			}
 		}
