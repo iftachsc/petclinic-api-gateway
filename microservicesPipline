@@ -72,14 +72,13 @@ node{
 						                            "-p","MYSQL_PASSWORD=${customerDbPwd}",
 						                            "-p","MYSQL_DATABASE=${customerDbName}",
 						                            "-p","DATABASE_SERVICE_NAME=${customerDbServiceHost}")
-				                            	
+				def imageStream = null                	
 				otherMicoservices.each {
 					println "Creating microservice ${it} in project ${integProject}"
-					def imageStream = "${stagingProject}/${it}:${stagingVersion}"
+					imageStream = "${stagingProject}/${it}:${stagingVersion}"
 					def integImageStream = "${integProject}/${it}:${stagingVersion}"
+					openshift.raw('tag',imageStream,integImageStream)
 					if(it == "customer-service") {
-						println "tag ${imageStream} ${integImageStream}"
-						openshift.raw('tag',imageStream,integImageStream)
 //						openshift.newApp("${javaS2iImage}~${microservicesGitBase}-${it}","--name",it,
 						openshift.newApp(integImageStream,"--name",it,
 														   "-e","DB_USERNAME=${customerDbUser}",
@@ -89,9 +88,11 @@ node{
 								                            "-e","DB_PORT=${customerDbServicePort}")
 					}
 					else {
-						openshift.newApp("${javaS2iImage}~${microservicesGitBase}-${it}","--name",it)
+						//openshift.newApp("${javaS2iImage}~${microservicesGitBase}-${it}","--name",it)
+						openshift.newApp(integImageStream,"--name",it)
 					}
 				}
+				
 				println "Deploying this microservice: ${thisMicroservice}"
 				//because of lang detection - we could just run it without the javaS2iImage
 				openshift.newApp("${javaS2iImage}~./","--name", thisMicroservice)
