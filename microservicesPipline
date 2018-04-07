@@ -145,7 +145,7 @@ node{
 			        println sh(script: "oc rsh ${podName} ${apiCommand}",returnStdout: true).trim()	
 				}
 				
-				def mysqlCommand = "mysql -umysql -pmysql -hlocalhost -e 'select * from owners' customer_db"
+				def mysqlCommand = "/opt/rh/rh-mysql57/root/usr/bin/mysql -umysql -pmysql -hlocalhost -e 'select * from owners' customer_db"
 				println "executing ${mysqlCommand}"
 				openshift.selector("dc", "customer-db").related('pods').withEach{
 					podName = it.object().metadata.name
