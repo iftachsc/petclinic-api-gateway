@@ -20,6 +20,7 @@ node{
 		
 	stage('Unit Tests'){
 		checkout scm
+		sh('oc project')
 		sh('ls')
 		//sh('mvn compile test')
 		sh('git status')
@@ -30,7 +31,7 @@ node{
 	}
 	stage('Create project for integ') {
 	//def projectDisplayName = "api-gateway-${scmVars.GIT_BRANCH}-${scmVars.GIT_COMMIT}"
-	
+		//getting current build openshift object
 		openshift.withCluster() {
 			openshift.withProject('cicd') {
 					
@@ -107,7 +108,6 @@ node{
 						return false
 					}
 					return allBuildsFinished
-				
 				}
 				
 				timeout(30) {
@@ -122,14 +122,13 @@ node{
 						}	
 					}
 				}
-				sh('oc get svc')
-				sleep(20) {
-					sh ()
-					sh("oc expose svc api-gateway")	
-				}
+				
+				sh("oc project ${integProject}")
+				sh("oc expose svc api-gateway")
+				
 				//pay attension os openshift.raw will use withCluster/withProject context. but sh(oc) will take jenkins's
-				openshift.raw('get', 'svc')
-				openshift.raw('expose','svc','api-gateway')
+				openshift.raw('oc ', 'project')
+				
 				//def apiGwEndpoint = sh(returnStdout: true, script: "oc get route -l app=api-gateway -o jsonpath='{.items[0].spec.host}'").trim()
 
 				//api call - add owner
@@ -140,14 +139,14 @@ node{
 				println apiCommand
 				openshift.selector("dc", "api-gateway").related('pods').withEach{
 					podName = it.object().metadata.name
-			        println sh(script: "oc rsh ${podName} ${apiCommand} -n ${integProject}",returnStdout: true).trim()	
+			        println sh(script: "oc rsh ${podName} ${apiCommand}",returnStdout: true).trim()	
 			        //echo openshift.raw('get','pod', 'petclinic2-3-hjx72').out
 				}
 				
 				def mysqlCommand = "mysql -umysql -pmysql -hlocalhost -e 'select * from owners' customer_db"
 				openshift.selector("dc", "customer-db").related('pods').withEach{
 					podName = it.object().metadata.name
-					def mysqlOut = sh(script: "oc rsh ${podName} ${apiCommand} -n {integProject}",returnStdout: true).trim()	
+					def mysqlOut = sh(script: "oc rsh ${podName} ${apiCommand}",returnStdout: true).trim()	
 			        println mysqlOut
 				}
 				
