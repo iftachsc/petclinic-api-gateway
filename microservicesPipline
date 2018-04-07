@@ -10,7 +10,8 @@ def customerDbName = "customer_db"
 def customerDbServiceHost = "customer-db"
 def customerDbServicePort = "3306"
 def stagingProject = "petclinit-staging"
-	  
+def cicdProject = "cicd"
+
 //println(env.getEnvironment().collect({environmentVariable ->  "${environmentVariable.key} = ${environmentVariable.value}"}).join("\n"))
 def commit = null
 def committer = null
@@ -32,7 +33,7 @@ node{
 	//def projectDisplayName = "api-gateway-${scmVars.GIT_BRANCH}-${scmVars.GIT_COMMIT}"
 		//getting current build openshift object
 		openshift.withCluster() {
-			openshift.withProject('cicd') {
+			openshift.withProject(cicdProject) {
 					
 				def reg = ~/^jenkins-cicd-/   
 				def currentBuild = env.BUILD_TAG - reg
@@ -168,6 +169,13 @@ node{
 						error("sql entry didnt contain expected content")
 					}
 				}
+			}
+		}
+	}
+	stage('Destroying Integ env') {
+		openshift.withCluster() {
+			openshift.withProject(cicdProject) {
+				openshift.deleteProject(integProject)
 			}
 		}
 	}
