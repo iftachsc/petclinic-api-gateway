@@ -11,7 +11,7 @@ def customerDbServiceHost = "customer-db"
 def customerDbServicePort = "3306"
 def stagingProject = "petclinit-staging"
 def stagingVersion = '1.5.9'
-def cicdProject = "cicd"
+def cicdProject = "ci-cd"
 
 //println(env.getEnvironment().collect({environmentVariable ->  "${environmentVariable.key} = ${environmentVariable.value}"}).join("\n"))
 def commit = null
