@@ -56,7 +56,7 @@ node{
 				integProject = "integration-${thisMicroservice}-${env.BUILD_NUMBER}"
 				integProjectDisplay = "Integ Tests ${thisMicroservice} #${env.BUILD_NUMBER}"
 			}
-			sleep(20)
+			
 			openshift.newProject(integProject,"--display-name", "\"${integProjectDisplay}\"","--description","\"commit: ${commit}, committer: ${committer.name}\"")
 			//sh("oc delete project ${integProject}")
 		}
