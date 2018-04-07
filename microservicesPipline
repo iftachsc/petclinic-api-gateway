@@ -122,6 +122,14 @@ node{
 						}	
 					}
 				}
+                
+			}
+		}
+	}
+	
+	stage('Run tests') {
+		openshift.withCluster() {
+			openshift.withProject(integProject) {
 				
 				openshift.raw('project',integProject)
 				openshift.raw('expose','svc',thisMicroservice)
@@ -150,13 +158,17 @@ node{
 				openshift.selector("dc", "customer-db").related('pods').withEach{
 					podName = it.object().metadata.name
 					def mysqlOut = sh(script: "oc rsh ${podName} ${mysqlCommand}",returnStdout: true).trim()	
-			        println mysqlOut
+					println mysqlOut
+					if(mysqlOut.contains(integProject))
+					{
+						println("it contains. Promoting app to staging")
+					}
+					else {
+						error("sql entry didnt contain expected content")
+					}
+			        
 				}
-				
-                
 			}
 		}
 	}
-	
-	stage('Run tests') {}
 }
