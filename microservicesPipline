@@ -78,6 +78,7 @@ node{
 					def imageStream = "${stagingProject}/${it}:${stagingVersion}"
 					def integImageStream = "${integProject}/${it}:${stagingVersion}"
 					if(it == "customer-service") {
+						println "tag ${imageStream} ${integImageStream}"
 						openshift.raw('tag',imageStream,integImageStream)
 //						openshift.newApp("${javaS2iImage}~${microservicesGitBase}-${it}","--name",it,
 						openshift.newApp(integImageStream,"--name",it,
