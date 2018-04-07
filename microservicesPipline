@@ -91,6 +91,8 @@ node{
 						//openshift.newApp("${javaS2iImage}~${microservicesGitBase}-${it}","--name",it)
 						openshift.newApp(integImageStream,"--name",it)
 					}
+					openshift.raw('delete','svc',it)
+					openshift.raw('expose','dc',it,"--port=8080")
 				}
 				
 				println "Deploying this microservice: ${thisMicroservice}"
