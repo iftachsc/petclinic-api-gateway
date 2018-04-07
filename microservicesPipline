@@ -123,11 +123,11 @@ node{
 					}
 				}
 				
-				sh("oc project ${integProject}")
-				sh("oc expose svc api-gateway")
+				openshift.raw('project',integProject)
+				openshift.raw('expose','svc',thisMicroservice)
 				
 				//pay attension os openshift.raw will use withCluster/withProject context. but sh(oc) will take jenkins's
-				openshift.raw('oc ', 'project')
+				openshift.raw('project')
 				
 				//def apiGwEndpoint = sh(returnStdout: true, script: "oc get route -l app=api-gateway -o jsonpath='{.items[0].spec.host}'").trim()
 
@@ -136,11 +136,11 @@ node{
 						"-d  '{\"firstName\":\"iftach2\",\"lastName\":\"schonbaum\",\"address\":\"25th Helsinki st.\",\"city\":\"Tel Aviv\",\"telephone\":\"0528288288\"}' " +
 						"http://localhost:8080/api/customer/owners"
 			
-				println apiCommand
+				println "executing ${apiCommand}"
+				
 				openshift.selector("dc", "api-gateway").related('pods').withEach{
 					podName = it.object().metadata.name
 			        println sh(script: "oc rsh ${podName} ${apiCommand}",returnStdout: true).trim()	
-			        //echo openshift.raw('get','pod', 'petclinic2-3-hjx72').out
 				}
 				
 				def mysqlCommand = "mysql -umysql -pmysql -hlocalhost -e 'select * from owners' customer_db"
