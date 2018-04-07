@@ -53,7 +53,7 @@ node{
 				println "Committer: ${committer}"
 				println "Commit: ${commit}"
 				
-				integProject = "integration-${thisMicroservice}-${env.BUILD_NUMBER}"
+				integProject = "integ-tests-${thisMicroservice}-${env.BUILD_NUMBER}"
 				integProjectDisplay = "Integ Tests ${thisMicroservice} #${env.BUILD_NUMBER}"
 			}
 			
