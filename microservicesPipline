@@ -21,7 +21,7 @@ def integProjectDisplay = null
 node{
 		
 	stage('Unit Tests'){
-		checkout scm
+		//checkout scm
 		sh('ls')
 		//sh('mvn compile test')
 		sh('git status')
@@ -52,9 +52,11 @@ node{
 				committer = rev.committer
 				println "Committer: ${committer}"
 				println "Commit: ${commit}"
-				
 				integProject = "integ-tests-${thisMicroservice}-${env.BUILD_NUMBER}"
 				integProjectDisplay = "Integ Tests ${thisMicroservice} #${env.BUILD_NUMBER}"
+				
+				checkout([$class: 'GitSCM', branches: [[name: commit ]],
+				          userRemoteConfigs: [[url: "${microservicesGitBase}-${it}.git"]]])
 			}
 			
 			openshift.newProject(integProject,"--display-name", "\"${integProjectDisplay}\"","--description","\"commit: ${commit}, committer: ${committer.name}\"")
