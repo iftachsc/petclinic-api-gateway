@@ -175,7 +175,7 @@ node{
 	stage('Destroying Integ env') {
 		openshift.withCluster() {
 			openshift.withProject(cicdProject) {
-				openshift.deleteProject(integProject)
+				openshift.raw('delete','project',integProject)
 			}
 		}
 	}
