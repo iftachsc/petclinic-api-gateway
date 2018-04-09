@@ -9,7 +9,7 @@ def customerDbPwd = "mysql"
 def customerDbName = "customer_db"
 def customerDbServiceHost = "customer-db"
 def customerDbServicePort = "3306"
-def stagingProject = "petclinit-staging"
+def stagingProject = "petclinic-staging"
 def stagingVersion = '1.5.9'
 def cicdProject = "ci-cd"
 
@@ -193,7 +193,7 @@ node{
 	stage('Promiting images') {
 		openshift.withCluster() {
 			openshift.withProject(cicdProject) {
-				openshift.raw('tag',"${integProject}/${thisMicroservice}:latest","${stagingProject}/${thisMicroservice}:1.6.0")
+				openshift.raw('tag',"${integProject}/${thisMicroservice}:latest","${stagingProject}/${thisMicroservice}")
 			}
 		}
 	}
