@@ -9,7 +9,7 @@ def customerDbPwd = "mysql"
 def customerDbName = "customer_db"
 def customerDbServiceHost = "customer-db"
 def customerDbServicePort = "3306"
-def stagingProject = "petclinic-staging"
+def stagingProject = "petclinit-staging"
 def stagingVersion = '1.5.9'
 def cicdProject = "ci-cd"
 
