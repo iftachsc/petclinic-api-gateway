@@ -193,7 +193,8 @@ node{
 	stage('Promiting images') {
 		openshift.withCluster() {
 			openshift.withProject(cicdProject) {
-				openshift.raw('tag',"${integProject}/${thisMicroservice}:latest","${stagingProject}/${thisMicroservice}")
+				openshift.raw('tag',"${integProject}/${thisMicroservice}:latest","${stagingProject}/${thisMicroservice}:1.7")
+				openshift.raw('tag',"${integProject}/${thisMicroservice}:latest","${stagingProject}/${thisMicroservice}:latest")
 			}
 		}
 	}
