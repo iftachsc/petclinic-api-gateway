@@ -4,7 +4,7 @@
     <groupId>org.springframework.samples.petclinic.api</groupId>
     <artifactId>api-gateway</artifactId>
     <packaging>jar</packaging>
-    <description>Spring PetClinic API Gateway</description>
+    <description>Spring PetClinic API Gateway</description> 
 
     <parent>
         <groupId>org.springframework.samples</groupId>
